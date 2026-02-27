@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import tadaSound from "./assets/sounds/tada.mp3";
 import checkmarkSound from "./assets/sounds/checkmark.mp3";
-import Avatar3D from "./components/Avatar3D";
-import AvatarDisplay from "./components/AvatarDisplay";
+import AvatarDisplayHomme from "./components/AvatarDisplayHomme";
+import AvatarDisplayFemme from "./components/AvatarDisplayFemme";
 
 
 export default function App() {
@@ -206,32 +206,6 @@ const avatar = () => {
   return "🏋️";
 };
 
-function getExerciseModel(exercise) {
-  if (!exercise || !exercise.exo) return "/models/avatar_idle.glb";
-
-  // Choix du prefix selon le niveau
-  let prefix = "avatar";
-
-  if (level >= 5) prefix = "avatar_lvl5";
-  else if (level >= 3) prefix = "avatar_lvl3";
-
-  switch (exercise.exo) {
-    case "Pompe":
-      return `/models/${prefix}_pushup.glb`;
-    case "Squat":
-      return `/models/${prefix}_squat.glb`;
-    case "Crunch":
-      return `/models/${prefix}_crunch.glb`;
-    case "Planche":
-      return `/models/${prefix}_plank.glb`;
-    case "Jumping Jack":
-      return `/models/${prefix}_jumpingjack.glb`;
-    case "idle":
-      return `/models/${prefix}_idle.glb`;
-    default:
-      return `/models/${prefix}_idle.glb`;
-  }
-}
 
 function PopButton({ style, onClick, children }) {
     return (
@@ -262,12 +236,21 @@ function PopButton({ style, onClick, children }) {
 
 
           <h1>APPLI MUSCU</h1>
-<AvatarDisplay
-  gender={gender}
-  bodyType={bodyType}
-  currentExercise={{ name: "idle" }}
-  level={level}
-/>
+{gender === "female" && currentExercise ? (
+  <AvatarDisplayFemme
+    gender={gender}
+    bodyType={bodyType || "thin"}
+    currentExercise={{ exo: "idle" }}
+    level={level}
+  />
+) : gender === "male" && currentExercise ? (
+  <AvatarDisplayHomme
+    gender={gender}
+    bodyType={bodyType || "thin"}
+    currentExercise={{ exo: "idle" }}
+    level={level}
+  />
+) : null}
 
           <div style={styles.bar}>
             <div style={{ ...styles.fill, width: `${levelProgress}%` }} />
@@ -560,22 +543,21 @@ if (nextExo) {
         {/* Avatar + barre XP */}
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 20 }}>
           <div style={styles.avatar}>
-            {gender === "male" && bodyType === "average" ? (
-              <Avatar3D
-                modelPath={getExerciseModel(currentExercise)}
-                scale={0.8}
-                positionY={-1.2}
-                width={300}
-                height={300}
-              />
-            ) : (
-           <AvatarDisplay
-  gender={gender}
-  bodyType={bodyType}
-  currentExercise={currentExercise}
-  level={level}
-/>
-            )}
+{gender === "female" && currentExercise ? (
+  <AvatarDisplayFemme
+    gender={gender}
+    bodyType={bodyType || "thin"}
+    currentExercise={currentExercise}
+    level={level}
+  />
+) : gender === "male" && currentExercise ? (
+  <AvatarDisplayHomme
+    gender={gender}
+    bodyType={bodyType || "thin"}
+    currentExercise={currentExercise}
+    level={level}
+  />
+) : null}
           </div>
 
           <div style={styles.bar}>
@@ -691,17 +673,21 @@ if (nextExo) {
           }}>
             ⏱ Temps de repos : {restTimer}s
           <div style={{ marginTop: 15 }}>
-  <Avatar3D
-   modelPath={`/models/${
-  level >= 5 ? "avatar_lvl5" :
-  level >= 3 ? "avatar_lvl3" :
-  "avatar"
-}_rest.glb`}
-   scale={0.7}
-positionY={-1.05}
-width={240}
-height={240}
+{gender === "female" && currentExercise ? (
+  <AvatarDisplayFemme
+    gender={gender}
+    bodyType={bodyType || "thin"}
+    currentExercise={{ exo: "rest" }}
+    level={level}
   />
+) : gender === "male" && currentExercise ? (
+  <AvatarDisplayHomme
+    gender={gender}
+    bodyType={bodyType || "thin"}
+    currentExercise={{ exo: "rest" }}
+    level={level}
+  />
+) : null}
 </div>
           </div>
         </div>
@@ -943,12 +929,21 @@ if (screen === "profile") {
         {/* Avatar + niveau */}
         <div style={{textAlign:"center", marginBottom:30}}>
        <div style={styles.avatar}>
- <AvatarDisplay
-  gender={gender}
-  bodyType={bodyType}
-  currentExercise={currentExercise}
-  level={level}
-/>
+{gender === "female" && currentExercise && bodyType ? (
+  <AvatarDisplayFemme
+    gender={gender}
+    bodyType={bodyType}
+    currentExercise={{ exo: "idle" }}
+    level={level}
+  />
+) : gender === "male" && currentExercise && bodyType ? (
+  <AvatarDisplayHomme
+    gender={gender}
+    bodyType={bodyType}
+    currentExercise={{ exo: "idle" }}
+    level={level}
+  />
+) : null}
 </div>
 
           <p>Niveau {level} — {xpInLevel}/{XP_PER_LEVEL} XP</p>
